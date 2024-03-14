@@ -1,0 +1,7 @@
+package org.tp24.excepcion;
+
+public class ClientException extends Exception{
+    public ClientException(String message) {
+        super(message);
+    }
+}
