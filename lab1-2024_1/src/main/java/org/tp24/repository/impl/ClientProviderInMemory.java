@@ -3,16 +3,9 @@ package org.tp24.repository.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.tp24.data.Client;
-import org.tp24.excepcion.IdNotFoundException;
-import org.tp24.excepcion.InvalidNameException;
-import org.tp24.excepcion.MaxQuoteException;
 import org.tp24.repository.ClientRepository;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import static java.lang.StringTemplate.STR;
+import java.util.*;
 
 
 public class ClientProviderInMemory implements ClientRepository {
@@ -22,57 +15,25 @@ public class ClientProviderInMemory implements ClientRepository {
     );
 
     @Override
-    public List<Client> search(String name, String lastName) throws InvalidNameException {
-        List<Client> result = new ArrayList<>();
-        for (Client client : clients) {
-            if (client.getName().equals(name)) {
-                result.add(client);
-                break;
-            }
-        }
-        if (result.isEmpty()) {
-            logger.error(STR."the client \{name} was not found");
-            throw new InvalidNameException(name, lastName);
-        }
-        logger.info(result.toString());
-        return result;
-
+    public List<Client> findAll() {
+        return null;
     }
 
     @Override
-    public List<Client> search(Double quote) throws MaxQuoteException {
-        List<Client> result = new ArrayList<>(); // this is the target that we will return
-        for (Client client : clients) {
-            if (client.getMaxQuote().equals(quote)) {
-                result.add(client);
-                break;
-            }
-        }
-        if (result.isEmpty()) {
-            logger.error(STR."client by quote \{quote} was not found");
-            throw new MaxQuoteException(quote);
-        } else {
-            logger.info(result.toString());
-            return result;
-        }
+    public List<Client> search(String name, String lastName) {
+        return clients.stream().filter(client -> client.getName().equals(name) && client.getLastName().equals(lastName)).toList();
     }
 
     @Override
-    public Client searchById(String id) throws IdNotFoundException {
-        Client result = null;
-        for (Client client : clients) {
-            if (client.getId().equals(id)) {
-                result = client;
-                break;
-            }
-        }
-        if (result == null) {
-            logger.error(STR."the client with id \{id} was not found");
-            throw new IdNotFoundException(id);
-        } else {
-            logger.info(result.toString());
-            return result;
-        }
+    public List<Client> search(Double quote) {
+        return clients.stream().filter(client -> Objects.equals(client.getMaxQuote(), quote)).toList();
+    }
+
+    @Override
+    public Client search(String id) {
+        return clients.stream().filter(client ->
+                Objects.equals(client.getId(), id)
+        ).findAny().orElse(null);
     }
 
     public void addClient(Client newClient) {

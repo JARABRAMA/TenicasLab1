@@ -1,16 +1,16 @@
 package org.tp24.repository;
 
 import org.tp24.data.Client;
-import org.tp24.excepcion.IdNotFoundException;
-import org.tp24.excepcion.InvalidNameException;
-import org.tp24.excepcion.MaxQuoteException;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface ClientRepository {
-    List<Client> search(String name, String lastName) throws InvalidNameException;
 
-    List<Client> search(Double quote) throws MaxQuoteException;
+    List<Client> findAll();
+    List<Client> search(String name, String lastName) throws IOException;
 
-    Client searchById(String id) throws IdNotFoundException;
+    List<Client> search(Double quote) ;
+
+    Client search(String id) ;
 }
